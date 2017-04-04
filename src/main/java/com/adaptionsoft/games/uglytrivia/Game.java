@@ -2,19 +2,21 @@ package com.adaptionsoft.games.uglytrivia;
 
 import java.io.PrintStream;
 import java.util.ArrayList;
+import java.util.Deque;
 import java.util.LinkedList;
+import java.util.List;
 
 public class Game {
     private final PrintStream output;
-    private ArrayList<String> players = new ArrayList<>();
+    private List<String> players = new ArrayList<>();
     private int[] places = new int[6];
     private int[] purses = new int[6];
     private boolean[] inPenaltyBox = new boolean[6];
 
-    private LinkedList<String> popQuestions = new LinkedList<>();
-    private LinkedList<String> scienceQuestions = new LinkedList<>();
-    private LinkedList<String> sportsQuestions = new LinkedList<>();
-    private LinkedList<String> rockQuestions = new LinkedList<>();
+    private Deque<String> popQuestions = new LinkedList<>();
+    private Deque<String> scienceQuestions = new LinkedList<>();
+    private Deque<String> sportsQuestions = new LinkedList<>();
+    private Deque<String> rockQuestions = new LinkedList<>();
 
     private int currentPlayer = 0;
     private boolean isGettingOutOfPenaltyBox;
@@ -25,7 +27,7 @@ public class Game {
             popQuestions.addLast("Pop Question " + i);
             scienceQuestions.addLast("Science Question " + i);
             sportsQuestions.addLast("Sports Question " + i);
-            rockQuestions.addLast(createRockQuestion(i));
+            rockQuestions.addLast("Rock Question " + i);
         }
     }
 
@@ -34,15 +36,11 @@ public class Game {
         this(System.out);
     }
 
-    private String createRockQuestion(int index) {
-        return "Rock Question " + index;
-    }
-
     public boolean add(String playerName) {
         players.add(playerName);
-        places[howManyPlayers()] = 0;
-        purses[howManyPlayers()] = 0;
-        inPenaltyBox[howManyPlayers()] = false;
+        places[players.size()] = 0;
+        purses[players.size()] = 0;
+        inPenaltyBox[players.size()] = false;
 
         print(playerName + " was added");
         print("They are player number " + players.size());
@@ -51,10 +49,6 @@ public class Game {
 
     private void print(String message) {
         output.println(message);
-    }
-
-    private int howManyPlayers() {
-        return players.size();
     }
 
     public void roll(int roll) {
