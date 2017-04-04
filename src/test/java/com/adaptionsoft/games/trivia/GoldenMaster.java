@@ -20,10 +20,9 @@ public class GoldenMaster {
 
     private String playGame(long seed) {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        System.setOut(new PrintStream(outputStream));
 
         boolean notAWinner;
-        Game aGame = new Game();
+        Game aGame = new Game(new PrintStream(outputStream));
 
         aGame.add("Chet");
         aGame.add("Pat");
