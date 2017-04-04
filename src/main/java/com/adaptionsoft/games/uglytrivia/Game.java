@@ -20,23 +20,17 @@ public class Game {
     public Game() {
         for (int i = 0; i < 50; i++) {
             popQuestions.addLast("Pop Question " + i);
-            scienceQuestions.addLast(("Science Question " + i));
-            sportsQuestions.addLast(("Sports Question " + i));
+            scienceQuestions.addLast("Science Question " + i);
+            sportsQuestions.addLast("Sports Question " + i);
             rockQuestions.addLast(createRockQuestion(i));
         }
     }
 
-    public String createRockQuestion(int index) {
+    private String createRockQuestion(int index) {
         return "Rock Question " + index;
     }
 
-    public boolean isPlayable() {
-        return (howManyPlayers() >= 2);
-    }
-
     public boolean add(String playerName) {
-
-
         players.add(playerName);
         places[howManyPlayers()] = 0;
         purses[howManyPlayers()] = 0;
@@ -47,7 +41,7 @@ public class Game {
         return true;
     }
 
-    public int howManyPlayers() {
+    private int howManyPlayers() {
         return players.size();
     }
 
@@ -61,7 +55,9 @@ public class Game {
 
                 System.out.println(players.get(currentPlayer) + " is getting out of the penalty box");
                 places[currentPlayer] = places[currentPlayer] + roll;
-                if (places[currentPlayer] > 11) places[currentPlayer] = places[currentPlayer] - 12;
+                if (places[currentPlayer] > 11) {
+                    places[currentPlayer] = places[currentPlayer] - 12;
+                }
 
                 System.out.println(players.get(currentPlayer)
                         + "'s new location is "
@@ -76,7 +72,9 @@ public class Game {
         } else {
 
             places[currentPlayer] = places[currentPlayer] + roll;
-            if (places[currentPlayer] > 11) places[currentPlayer] = places[currentPlayer] - 12;
+            if (places[currentPlayer] > 11) {
+                places[currentPlayer] = places[currentPlayer] - 12;
+            }
 
             System.out.println(players.get(currentPlayer)
                     + "'s new location is "
