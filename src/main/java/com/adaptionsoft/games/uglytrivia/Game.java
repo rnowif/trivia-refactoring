@@ -61,14 +61,11 @@ public class Game {
                 isGettingOutOfPenaltyBox = true;
 
                 print(players.get(currentPlayer) + " is getting out of the penalty box");
-                places[currentPlayer] = places[currentPlayer] + roll;
-                if (places[currentPlayer] >= NB_CELLS) {
-                    places[currentPlayer] = places[currentPlayer] - NB_CELLS;
-                }
+                move(roll);
 
                 print(players.get(currentPlayer)
                         + "'s new location is "
-                        + places[currentPlayer]);
+                        + currentPosition());
                 print("The category is " + currentCategory());
                 askQuestion();
             } else {
@@ -78,18 +75,19 @@ public class Game {
 
         } else {
 
-            places[currentPlayer] = places[currentPlayer] + roll;
-            if (places[currentPlayer] >= NB_CELLS) {
-                places[currentPlayer] = places[currentPlayer] - NB_CELLS;
-            }
+            move(roll);
 
             print(players.get(currentPlayer)
                     + "'s new location is "
-                    + places[currentPlayer]);
+                    + currentPosition());
             print("The category is " + currentCategory());
             askQuestion();
         }
 
+    }
+
+    private void move(int offset) {
+        places[currentPlayer] = (currentPosition() + offset) % NB_CELLS;
     }
 
     private void askQuestion() {
@@ -105,16 +103,24 @@ public class Game {
 
 
     private Category currentCategory() {
-        if (places[currentPlayer] == 0) return Category.POP;
-        if (places[currentPlayer] == 4) return Category.POP;
-        if (places[currentPlayer] == 8) return Category.POP;
-        if (places[currentPlayer] == 1) return Category.SCIENCE;
-        if (places[currentPlayer] == 5) return Category.SCIENCE;
-        if (places[currentPlayer] == 9) return Category.SCIENCE;
-        if (places[currentPlayer] == 2) return Category.SPORTS;
-        if (places[currentPlayer] == 6) return Category.SPORTS;
-        if (places[currentPlayer] == 10) return Category.SPORTS;
+        if (currentPosition() == 0) return Category.POP;
+        if (currentPosition() == 4) return Category.POP;
+        if (currentPosition() == 8) return Category.POP;
+        if (currentPosition() == 1) return Category.SCIENCE;
+        if (currentPosition() == 5) return Category.SCIENCE;
+        if (currentPosition() == 9) return Category.SCIENCE;
+        if (currentPosition() == 2) return Category.SPORTS;
+        if (currentPosition() == 6) return Category.SPORTS;
+        if (currentPosition() == 10) return Category.SPORTS;
         return Category.ROCK;
+    }
+
+    private int currentPosition() {
+        return places[currentPlayer];
+    }
+
+    private int nextPlayer() {
+        return (currentPlayer + 1) % players.size();
     }
 
     public boolean wasCorrectlyAnswered() {
@@ -128,13 +134,11 @@ public class Game {
                         + " Gold Coins.");
 
                 boolean winner = didPlayerWin();
-                currentPlayer++;
-                if (currentPlayer == players.size()) currentPlayer = 0;
+                currentPlayer = nextPlayer();
 
                 return winner;
             } else {
-                currentPlayer++;
-                if (currentPlayer == players.size()) currentPlayer = 0;
+                currentPlayer = nextPlayer();
                 return true;
             }
 
@@ -149,8 +153,7 @@ public class Game {
                     + " Gold Coins.");
 
             boolean winner = didPlayerWin();
-            currentPlayer++;
-            if (currentPlayer == players.size()) currentPlayer = 0;
+            currentPlayer = nextPlayer();
 
             return winner;
         }
@@ -161,8 +164,7 @@ public class Game {
         print(players.get(currentPlayer) + " was sent to the penalty box");
         inPenaltyBox[currentPlayer] = true;
 
-        currentPlayer++;
-        if (currentPlayer == players.size()) currentPlayer = 0;
+        currentPlayer = nextPlayer();
         return true;
     }
 
