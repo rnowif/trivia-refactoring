@@ -1,0 +1,7 @@
+target/
+.idea/
+.classpath
+*.iml
+.project
+Metrics/
+src/main/resources/approval/*.forapproval.txt
