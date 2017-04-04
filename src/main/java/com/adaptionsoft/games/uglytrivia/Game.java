@@ -92,28 +92,28 @@ public class Game {
     }
 
     private void askQuestion() {
-        if (currentCategory() == "Pop")
+        if (currentCategory().equals(Category.POP))
             print(popQuestions.removeFirst());
-        if (currentCategory() == "Science")
+        if (currentCategory().equals(Category.SCIENCE))
             print(scienceQuestions.removeFirst());
-        if (currentCategory() == "Sports")
+        if (currentCategory().equals(Category.SPORTS))
             print(sportsQuestions.removeFirst());
-        if (currentCategory() == "Rock")
+        if (currentCategory().equals(Category.ROCK))
             print(rockQuestions.removeFirst());
     }
 
 
-    private String currentCategory() {
-        if (places[currentPlayer] == 0) return "Pop";
-        if (places[currentPlayer] == 4) return "Pop";
-        if (places[currentPlayer] == 8) return "Pop";
-        if (places[currentPlayer] == 1) return "Science";
-        if (places[currentPlayer] == 5) return "Science";
-        if (places[currentPlayer] == 9) return "Science";
-        if (places[currentPlayer] == 2) return "Sports";
-        if (places[currentPlayer] == 6) return "Sports";
-        if (places[currentPlayer] == 10) return "Sports";
-        return "Rock";
+    private Category currentCategory() {
+        if (places[currentPlayer] == 0) return Category.POP;
+        if (places[currentPlayer] == 4) return Category.POP;
+        if (places[currentPlayer] == 8) return Category.POP;
+        if (places[currentPlayer] == 1) return Category.SCIENCE;
+        if (places[currentPlayer] == 5) return Category.SCIENCE;
+        if (places[currentPlayer] == 9) return Category.SCIENCE;
+        if (places[currentPlayer] == 2) return Category.SPORTS;
+        if (places[currentPlayer] == 6) return Category.SPORTS;
+        if (places[currentPlayer] == 10) return Category.SPORTS;
+        return Category.ROCK;
     }
 
     public boolean wasCorrectlyAnswered() {
