@@ -7,6 +7,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class Game {
+    public static final int NB_CELLS = 12;
     private final PrintStream output;
     private List<String> players = new ArrayList<>();
     private int[] places = new int[6];
@@ -61,8 +62,8 @@ public class Game {
 
                 print(players.get(currentPlayer) + " is getting out of the penalty box");
                 places[currentPlayer] = places[currentPlayer] + roll;
-                if (places[currentPlayer] > 11) {
-                    places[currentPlayer] = places[currentPlayer] - 12;
+                if (places[currentPlayer] >= NB_CELLS) {
+                    places[currentPlayer] = places[currentPlayer] - NB_CELLS;
                 }
 
                 print(players.get(currentPlayer)
@@ -78,8 +79,8 @@ public class Game {
         } else {
 
             places[currentPlayer] = places[currentPlayer] + roll;
-            if (places[currentPlayer] > 11) {
-                places[currentPlayer] = places[currentPlayer] - 12;
+            if (places[currentPlayer] >= NB_CELLS) {
+                places[currentPlayer] = places[currentPlayer] - NB_CELLS;
             }
 
             print(players.get(currentPlayer)
