@@ -1,34 +1,38 @@
 package com.adaptionsoft.games.uglytrivia;
 
 import java.io.PrintStream;
-import java.util.ArrayList;
-import java.util.Deque;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 public class Game {
     private static final int NB_CELLS = 12;
+    private static final Category[] CATEGORIES = new Category[]{Category.POP, Category.SCIENCE, Category.SPORTS, Category.ROCK};
+
     private final PrintStream output;
+    private final Map<Integer, Category> categoriesByPosition = new HashMap<>(NB_CELLS);
+    private final Map<Category, Deque<String>> questionsByCategory = new HashMap<>();
+
     private final List<String> players = new ArrayList<>();
     private final int[] places = new int[6];
     private final int[] purses = new int[6];
     private final boolean[] inPenaltyBox = new boolean[6];
-
-    private final Deque<String> popQuestions = new LinkedList<>();
-    private final Deque<String> scienceQuestions = new LinkedList<>();
-    private final Deque<String> sportsQuestions = new LinkedList<>();
-    private final Deque<String> rockQuestions = new LinkedList<>();
-
     private int currentPlayer = 0;
     private boolean isGettingOutOfPenaltyBox;
 
     public Game(PrintStream output) {
         this.output = output;
+
+        for (Category category : CATEGORIES) {
+            questionsByCategory.put(category, new LinkedList<>());
+        }
+
         for (int i = 0; i < 50; i++) {
-            popQuestions.addLast("Pop Question " + i);
-            scienceQuestions.addLast("Science Question " + i);
-            sportsQuestions.addLast("Sports Question " + i);
-            rockQuestions.addLast("Rock Question " + i);
+            for (Category category : CATEGORIES) {
+                questionsByCategory.get(category).addLast(category.toString() + " Question " + i);
+            }
+        }
+
+        for (int i = 0; i < NB_CELLS; i++) {
+            categoriesByPosition.put(i, CATEGORIES[i % CATEGORIES.length]);
         }
     }
 
@@ -86,27 +90,11 @@ public class Game {
     }
 
     private void askQuestion() {
-        if (currentCategory().equals(Category.POP))
-            print(popQuestions.removeFirst());
-        if (currentCategory().equals(Category.SCIENCE))
-            print(scienceQuestions.removeFirst());
-        if (currentCategory().equals(Category.SPORTS))
-            print(sportsQuestions.removeFirst());
-        if (currentCategory().equals(Category.ROCK))
-            print(rockQuestions.removeFirst());
+        print(questionsByCategory.get(currentCategory()).removeFirst());
     }
 
     private Category currentCategory() {
-        if (currentPosition() == 0) return Category.POP;
-        if (currentPosition() == 4) return Category.POP;
-        if (currentPosition() == 8) return Category.POP;
-        if (currentPosition() == 1) return Category.SCIENCE;
-        if (currentPosition() == 5) return Category.SCIENCE;
-        if (currentPosition() == 9) return Category.SCIENCE;
-        if (currentPosition() == 2) return Category.SPORTS;
-        if (currentPosition() == 6) return Category.SPORTS;
-        if (currentPosition() == 10) return Category.SPORTS;
-        return Category.ROCK;
+       return categoriesByPosition.get(currentPosition());
     }
 
 
