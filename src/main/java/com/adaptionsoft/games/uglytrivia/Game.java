@@ -3,15 +3,17 @@ package com.adaptionsoft.games.uglytrivia;
 import java.io.PrintStream;
 import java.util.*;
 
+import static java.util.Arrays.asList;
+
 public class Game {
     private static final int NB_CELLS = 12;
-    private static final Category[] CATEGORIES = new Category[]{Category.POP, Category.SCIENCE, Category.SPORTS, Category.ROCK};
+    private static final List<Category> CATEGORIES = asList(Category.POP, Category.SCIENCE, Category.SPORTS, Category.ROCK);
 
     private final PrintStream output;
-    private final Map<Integer, Category> categoriesByPosition = new HashMap<>(NB_CELLS);
     private final Map<Category, Deque<String>> questionsByCategory = new HashMap<>();
 
     private final PlayerList players = new PlayerList();
+    private final Board board = new Board(NB_CELLS, CATEGORIES);
 
     public Game(PrintStream output) {
         this.output = output;
@@ -24,10 +26,6 @@ public class Game {
             for (Category category : CATEGORIES) {
                 questionsByCategory.get(category).addLast(category.toString() + " Question " + i);
             }
-        }
-
-        for (int i = 0; i < NB_CELLS; i++) {
-            categoriesByPosition.put(i, CATEGORIES[i % CATEGORIES.length]);
         }
     }
 
@@ -62,25 +60,18 @@ public class Game {
 
         }
 
-        currentPlayer.moveTo(newPosition(currentPlayer.getPosition(), roll));
+        int newPosition = board.newPosition(currentPlayer.getPosition(), roll);
 
-        Category currentCategory = categoryOf(currentPlayer.getPosition());
+        currentPlayer.moveTo(newPosition);
+        print(currentPlayer + "'s new location is " + newPosition);
 
-        print(currentPlayer + "'s new location is " + currentPlayer.getPosition());
+        Category currentCategory = board.categoryOf(newPosition);
         print("The category is " + currentCategory);
         print(nextQuestionAbout(currentCategory));
     }
 
-    private int newPosition(int currentPosition, int roll) {
-        return (currentPosition + roll) % NB_CELLS;
-    }
-
     private String nextQuestionAbout(Category category) {
         return questionsByCategory.get(category).removeFirst();
-    }
-
-    private Category categoryOf(int position) {
-        return categoriesByPosition.get(position);
     }
 
     /**
