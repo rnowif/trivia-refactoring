@@ -1,7 +1,7 @@
 package com.adaptionsoft.games.uglytrivia;
 
 import java.io.PrintStream;
-import java.util.*;
+import java.util.List;
 
 import static java.util.Arrays.asList;
 
@@ -40,7 +40,7 @@ public class Game {
         print("They have rolled a " + roll);
 
         if (currentPlayer.isInPenaltyBox()) {
-            if (roll % 2 != 0) {
+            if (shouldReleaseFromPenaltyBox(roll)) {
                 currentPlayer.exitsPenaltyBox();
                 print(currentPlayer + " is getting out of the penalty box");
             } else {
@@ -58,6 +58,10 @@ public class Game {
         Category currentCategory = board.categoryOf(newPosition);
         print("The category is " + currentCategory);
         print(deck.nextQuestionAbout(currentCategory));
+    }
+
+    private boolean shouldReleaseFromPenaltyBox(int roll) {
+        return roll % 2 != 0;
     }
 
     /**
