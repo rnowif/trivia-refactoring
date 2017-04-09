@@ -11,11 +11,9 @@ public class Game {
     private final Map<Integer, Category> categoriesByPosition = new HashMap<>(NB_CELLS);
     private final Map<Category, Deque<String>> questionsByCategory = new HashMap<>();
 
-    private final List<String> players = new ArrayList<>();
-    private final int[] places = new int[6];
-    private final int[] purses = new int[6];
-    private final boolean[] inPenaltyBox = new boolean[6];
-    private int currentPlayer = 0;
+    private final List<Player> players = new ArrayList<>();
+    private Player currentPlayer = null;
+    private int currentPlayerIndex = 0;
 
     public Game(PrintStream output) {
         this.output = output;
@@ -41,13 +39,10 @@ public class Game {
     }
 
     public void add(String playerName) {
-        players.add(playerName);
-        places[players.size()] = 0;
-        purses[players.size()] = 0;
-        inPenaltyBox[players.size()] = false;
-
+        players.add(new Player(playerName));
         print(playerName + " was added");
         print("There are " + players.size() + " players");
+        currentPlayer = players.get(currentPlayerIndex);
     }
 
     private void print(String message) {
@@ -55,27 +50,25 @@ public class Game {
     }
 
     public void roll(int roll) {
-        String playerName = players.get(currentPlayer);
-        print(playerName + " is the current player");
+        print(currentPlayer + " is the current player");
         print("They have rolled a " + roll);
 
-        if (inPenaltyBox[currentPlayer]) {
+        if (currentPlayer.isInPenaltyBox()) {
             if (roll % 2 != 0) {
-                inPenaltyBox[currentPlayer] = false;
-                print(playerName + " is getting out of the penalty box");
+                currentPlayer.exitsPenaltyBox();
+                print(currentPlayer + " is getting out of the penalty box");
             } else {
-                print(playerName + " is not getting out of the penalty box");
+                print(currentPlayer + " is not getting out of the penalty box");
                 return;
             }
 
         }
 
-        int currentPosition = positionOf(currentPlayer);
-        moveTo(currentPlayer, newPosition(currentPosition, roll));
+        currentPlayer.moveTo(newPosition(currentPlayer.getPosition(), roll));
 
-        Category currentCategory = categoryOf(currentPosition);
+        Category currentCategory = categoryOf(currentPlayer.getPosition());
 
-        print(playerName + "'s new location is " + currentPosition);
+        print(currentPlayer + "'s new location is " + currentPlayer.getPosition());
         print("The category is " + currentCategory);
         print(nextQuestionAbout(currentCategory));
     }
@@ -92,51 +85,37 @@ public class Game {
         return categoriesByPosition.get(position);
     }
 
-    private void moveTo(int currentPlayer, int position) {
-        places[currentPlayer] = position;
-    }
-
-    private int positionOf(int currentPlayer) {
-        return places[currentPlayer];
-    }
-
-    private int nextPlayer() {
-        return (currentPlayer + 1) % players.size();
-    }
-
-    private boolean hasWon(int currentPlayer) {
-        return purses[currentPlayer] == 6;
+    private Player nextPlayer() {
+        currentPlayerIndex = (currentPlayerIndex + 1) % players.size();
+        return players.get(currentPlayerIndex);
     }
 
     /**
-     *
      * @return true if the game continues
      */
     public boolean wasCorrectlyAnswered() {
-        if (inPenaltyBox[currentPlayer]) {
+        if (currentPlayer.isInPenaltyBox()) {
             currentPlayer = nextPlayer();
             return true;
-        } else {
-
-            print("Answer was correct!!!!");
-            purses[currentPlayer]++;
-            print(players.get(currentPlayer) + " now has " + purses[currentPlayer] + " Gold Coins.");
-
-            boolean gameContinues = !hasWon(currentPlayer);
-            currentPlayer = nextPlayer();
-
-            return gameContinues;
         }
+
+        print("Answer was correct!!!!");
+        currentPlayer.reward(1);
+        print(currentPlayer + " now has " + currentPlayer.getGoldCoinsCount() + " Gold Coins.");
+
+        boolean gameContinues = !currentPlayer.hasWon();
+        currentPlayer = nextPlayer();
+
+        return gameContinues;
     }
 
     /**
-     *
      * @return true if the game continues
      */
     public boolean wrongAnswer() {
         print("Question was incorrectly answered");
-        print(players.get(currentPlayer) + " was sent to the penalty box");
-        inPenaltyBox[currentPlayer] = true;
+        currentPlayer.entersPenaltyBox();
+        print(currentPlayer + " was sent to the penalty box");
 
         currentPlayer = nextPlayer();
         return true;
