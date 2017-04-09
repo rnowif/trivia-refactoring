@@ -98,9 +98,13 @@ public class Game {
     }
 
     private boolean didPlayerWin() {
-        return purses[currentPlayer] != 6;
+        return purses[currentPlayer] == 6;
     }
 
+    /**
+     *
+     * @return true if the game continues
+     */
     public boolean wasCorrectlyAnswered() {
         if (inPenaltyBox[currentPlayer]) {
             currentPlayer = nextPlayer();
@@ -111,14 +115,17 @@ public class Game {
             purses[currentPlayer]++;
             print(players.get(currentPlayer) + " now has " + purses[currentPlayer] + " Gold Coins.");
 
-            boolean winner = didPlayerWin();
+            boolean gameContinues = !didPlayerWin();
             currentPlayer = nextPlayer();
 
-            return winner;
+            return gameContinues;
         }
     }
 
-
+    /**
+     *
+     * @return true if the game continues
+     */
     public boolean wrongAnswer() {
         print("Question was incorrectly answered");
         print(players.get(currentPlayer) + " was sent to the penalty box");
