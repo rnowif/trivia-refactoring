@@ -6,9 +6,6 @@ import java.util.List;
 import static java.util.Arrays.asList;
 
 public class Game {
-    private static final int NB_CELLS = 12;
-    private static final int NB_QUESTIONS = 50;
-    private static final List<Category> CATEGORIES = asList(Category.POP, Category.SCIENCE, Category.SPORTS, Category.ROCK);
 
     private final PrintStream output;
     private final Board board;
@@ -20,30 +17,6 @@ public class Game {
         this.board = board;
         this.deck = deck;
         this.players = players;
-    }
-
-    /**
-     * @deprecated Use constructor with fields instead
-     */
-    @Deprecated
-    public Game() {
-        this(
-                System.out,
-                new Board(NB_CELLS, CATEGORIES),
-                new QuestionDeck(NB_QUESTIONS, CATEGORIES),
-                new PlayerList()
-        );
-    }
-
-    /**
-     * @param playerName Name of the player to add
-     * @deprecated Use the constructor with a predefined list of players
-     */
-    @Deprecated
-    public void add(String playerName) {
-        players.add(playerName);
-        print(playerName + " was added");
-        print("There are " + players.size() + " players");
     }
 
     private void print(String message) {
