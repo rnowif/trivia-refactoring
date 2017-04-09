@@ -55,41 +55,44 @@ public class Game {
     }
 
     public void roll(int roll) {
-        print(players.get(currentPlayer) + " is the current player");
+        String playerName = players.get(currentPlayer);
+        print(playerName + " is the current player");
         print("They have rolled a " + roll);
 
         if (inPenaltyBox[currentPlayer]) {
             if (roll % 2 != 0) {
                 inPenaltyBox[currentPlayer] = false;
-                print(players.get(currentPlayer) + " is getting out of the penalty box");
+                print(playerName + " is getting out of the penalty box");
             } else {
-                print(players.get(currentPlayer) + " is not getting out of the penalty box");
+                print(playerName + " is not getting out of the penalty box");
                 return;
             }
 
         }
 
-        move(roll);
+        move(currentPlayer, roll);
 
-        print(players.get(currentPlayer) + "'s new location is " + currentPosition());
-        print("The category is " + currentCategory());
-        askQuestion();
+        int currentPosition = currentPosition(currentPlayer);
+        Category currentCategory = currentCategory(currentPosition);
+
+        print(playerName + "'s new location is " + currentPosition);
+        print("The category is " + currentCategory);
+        askQuestion(currentCategory);
     }
 
-    private void askQuestion() {
-        print(questionsByCategory.get(currentCategory()).removeFirst());
+    private void askQuestion(Category category) {
+        print(questionsByCategory.get(category).removeFirst());
     }
 
-    private Category currentCategory() {
-        return categoriesByPosition.get(currentPosition());
+    private Category currentCategory(int position) {
+        return categoriesByPosition.get(position);
     }
 
-
-    private void move(int offset) {
-        places[currentPlayer] = (currentPosition() + offset) % NB_CELLS;
+    private void move(int currentPlayer, int offset) {
+        places[currentPlayer] = (currentPosition(currentPlayer) + offset) % NB_CELLS;
     }
 
-    private int currentPosition() {
+    private int currentPosition(int currentPlayer) {
         return places[currentPlayer];
     }
 
@@ -97,7 +100,7 @@ public class Game {
         return (currentPlayer + 1) % players.size();
     }
 
-    private boolean didPlayerWin() {
+    private boolean didPlayerWin(int currentPlayer) {
         return purses[currentPlayer] == 6;
     }
 
@@ -115,7 +118,7 @@ public class Game {
             purses[currentPlayer]++;
             print(players.get(currentPlayer) + " now has " + purses[currentPlayer] + " Gold Coins.");
 
-            boolean gameContinues = !didPlayerWin();
+            boolean gameContinues = !didPlayerWin(currentPlayer);
             currentPlayer = nextPlayer();
 
             return gameContinues;
