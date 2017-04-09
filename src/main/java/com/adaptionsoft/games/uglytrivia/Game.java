@@ -16,7 +16,6 @@ public class Game {
     private final int[] purses = new int[6];
     private final boolean[] inPenaltyBox = new boolean[6];
     private int currentPlayer = 0;
-    private boolean isGettingOutOfPenaltyBox;
 
     public Game(PrintStream output) {
         this.output = output;
@@ -61,32 +60,22 @@ public class Game {
 
         if (inPenaltyBox[currentPlayer]) {
             if (roll % 2 != 0) {
-                isGettingOutOfPenaltyBox = true;
-
+                inPenaltyBox[currentPlayer] = false;
                 print(players.get(currentPlayer) + " is getting out of the penalty box");
-                move(roll);
-
-                print(players.get(currentPlayer)
-                        + "'s new location is "
-                        + currentPosition());
-                print("The category is " + currentCategory());
-                askQuestion();
             } else {
                 print(players.get(currentPlayer) + " is not getting out of the penalty box");
-                isGettingOutOfPenaltyBox = false;
+                return;
             }
 
-        } else {
-
-            move(roll);
-
-            print(players.get(currentPlayer)
-                    + "'s new location is "
-                    + currentPosition());
-            print("The category is " + currentCategory());
-            askQuestion();
         }
 
+        move(roll);
+
+        print(players.get(currentPlayer)
+                + "'s new location is "
+                + currentPosition());
+        print("The category is " + currentCategory());
+        askQuestion();
     }
 
     private void askQuestion() {
@@ -116,27 +105,11 @@ public class Game {
 
     public boolean wasCorrectlyAnswered() {
         if (inPenaltyBox[currentPlayer]) {
-            if (isGettingOutOfPenaltyBox) {
-                print("Answer was correct!!!!");
-                purses[currentPlayer]++;
-                print(players.get(currentPlayer)
-                        + " now has "
-                        + purses[currentPlayer]
-                        + " Gold Coins.");
-
-                boolean winner = didPlayerWin();
-                currentPlayer = nextPlayer();
-
-                return winner;
-            } else {
-                currentPlayer = nextPlayer();
-                return true;
-            }
-
-
+            currentPlayer = nextPlayer();
+            return true;
         } else {
 
-            print("Answer was corrent!!!!");
+            print("Answer was correct!!!!");
             purses[currentPlayer]++;
             print(players.get(currentPlayer)
                     + " now has "
