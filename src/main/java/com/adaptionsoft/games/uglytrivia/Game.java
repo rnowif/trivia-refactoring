@@ -11,9 +11,7 @@ public class Game {
     private final Map<Integer, Category> categoriesByPosition = new HashMap<>(NB_CELLS);
     private final Map<Category, Deque<String>> questionsByCategory = new HashMap<>();
 
-    private final List<Player> players = new ArrayList<>();
-    private Player currentPlayer = null;
-    private int currentPlayerIndex = 0;
+    private final PlayerList players = new PlayerList();
 
     public Game(PrintStream output) {
         this.output = output;
@@ -39,10 +37,9 @@ public class Game {
     }
 
     public void add(String playerName) {
-        players.add(new Player(playerName));
+        players.add(playerName);
         print(playerName + " was added");
         print("There are " + players.size() + " players");
-        currentPlayer = players.get(currentPlayerIndex);
     }
 
     private void print(String message) {
@@ -50,6 +47,7 @@ public class Game {
     }
 
     public void roll(int roll) {
+        Player currentPlayer = players.currentPlayer();
         print(currentPlayer + " is the current player");
         print("They have rolled a " + roll);
 
@@ -85,17 +83,13 @@ public class Game {
         return categoriesByPosition.get(position);
     }
 
-    private Player nextPlayer() {
-        currentPlayerIndex = (currentPlayerIndex + 1) % players.size();
-        return players.get(currentPlayerIndex);
-    }
-
     /**
      * @return true if the game continues
      */
     public boolean wasCorrectlyAnswered() {
+        Player currentPlayer = players.currentPlayer();
         if (currentPlayer.isInPenaltyBox()) {
-            currentPlayer = nextPlayer();
+            players.nextPlayer();
             return true;
         }
 
@@ -104,7 +98,7 @@ public class Game {
         print(currentPlayer + " now has " + currentPlayer.getGoldCoinsCount() + " Gold Coins.");
 
         boolean gameContinues = !currentPlayer.hasWon();
-        currentPlayer = nextPlayer();
+        players.nextPlayer();
 
         return gameContinues;
     }
@@ -113,11 +107,12 @@ public class Game {
      * @return true if the game continues
      */
     public boolean wrongAnswer() {
+        Player currentPlayer = players.currentPlayer();
         print("Question was incorrectly answered");
         currentPlayer.entersPenaltyBox();
         print(currentPlayer + " was sent to the penalty box");
 
-        currentPlayer = nextPlayer();
+        players.nextPlayer();
         return true;
     }
 }

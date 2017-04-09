@@ -11,6 +11,10 @@ class Player {
         this.name = name;
     }
 
+    public String getName() {
+        return name;
+    }
+
     int getPosition() {
         return position;
     }
