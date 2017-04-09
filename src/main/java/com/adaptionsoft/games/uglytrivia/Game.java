@@ -70,29 +70,33 @@ public class Game {
 
         }
 
-        move(currentPlayer, roll);
+        int currentPosition = positionOf(currentPlayer);
+        moveTo(currentPlayer, newPosition(currentPosition, roll));
 
-        int currentPosition = currentPosition(currentPlayer);
-        Category currentCategory = currentCategory(currentPosition);
+        Category currentCategory = categoryOf(currentPosition);
 
         print(playerName + "'s new location is " + currentPosition);
         print("The category is " + currentCategory);
-        print(askQuestion(currentCategory));
+        print(nextQuestionAbout(currentCategory));
     }
 
-    private String askQuestion(Category category) {
+    private int newPosition(int currentPosition, int roll) {
+        return (currentPosition + roll) % NB_CELLS;
+    }
+
+    private String nextQuestionAbout(Category category) {
         return questionsByCategory.get(category).removeFirst();
     }
 
-    private Category currentCategory(int position) {
+    private Category categoryOf(int position) {
         return categoriesByPosition.get(position);
     }
 
-    private void move(int currentPlayer, int offset) {
-        places[currentPlayer] = (currentPosition(currentPlayer) + offset) % NB_CELLS;
+    private void moveTo(int currentPlayer, int position) {
+        places[currentPlayer] = position;
     }
 
-    private int currentPosition(int currentPlayer) {
+    private int positionOf(int currentPlayer) {
         return places[currentPlayer];
     }
 
@@ -100,7 +104,7 @@ public class Game {
         return (currentPlayer + 1) % players.size();
     }
 
-    private boolean didPlayerWin(int currentPlayer) {
+    private boolean hasWon(int currentPlayer) {
         return purses[currentPlayer] == 6;
     }
 
@@ -118,7 +122,7 @@ public class Game {
             purses[currentPlayer]++;
             print(players.get(currentPlayer) + " now has " + purses[currentPlayer] + " Gold Coins.");
 
-            boolean gameContinues = !didPlayerWin(currentPlayer);
+            boolean gameContinues = !hasWon(currentPlayer);
             currentPlayer = nextPlayer();
 
             return gameContinues;
