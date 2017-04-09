@@ -7,26 +7,16 @@ import static java.util.Arrays.asList;
 
 public class Game {
     private static final int NB_CELLS = 12;
+    private static final int NB_QUESTIONS = 50;
     private static final List<Category> CATEGORIES = asList(Category.POP, Category.SCIENCE, Category.SPORTS, Category.ROCK);
 
     private final PrintStream output;
-    private final Map<Category, Deque<String>> questionsByCategory = new HashMap<>();
-
     private final PlayerList players = new PlayerList();
     private final Board board = new Board(NB_CELLS, CATEGORIES);
+    private final QuestionDeck deck = new QuestionDeck(NB_QUESTIONS, CATEGORIES);
 
     public Game(PrintStream output) {
         this.output = output;
-
-        for (Category category : CATEGORIES) {
-            questionsByCategory.put(category, new LinkedList<>());
-        }
-
-        for (int i = 0; i < 50; i++) {
-            for (Category category : CATEGORIES) {
-                questionsByCategory.get(category).addLast(category.toString() + " Question " + i);
-            }
-        }
     }
 
     @Deprecated
@@ -67,11 +57,7 @@ public class Game {
 
         Category currentCategory = board.categoryOf(newPosition);
         print("The category is " + currentCategory);
-        print(nextQuestionAbout(currentCategory));
-    }
-
-    private String nextQuestionAbout(Category category) {
-        return questionsByCategory.get(category).removeFirst();
+        print(deck.nextQuestionAbout(currentCategory));
     }
 
     /**
@@ -79,8 +65,9 @@ public class Game {
      */
     public boolean wasCorrectlyAnswered() {
         Player currentPlayer = players.currentPlayer();
+        players.nextPlayer();
+
         if (currentPlayer.isInPenaltyBox()) {
-            players.nextPlayer();
             return true;
         }
 
@@ -88,10 +75,7 @@ public class Game {
         currentPlayer.reward(1);
         print(currentPlayer + " now has " + currentPlayer.getGoldCoinsCount() + " Gold Coins.");
 
-        boolean gameContinues = !currentPlayer.hasWon();
-        players.nextPlayer();
-
-        return gameContinues;
+        return !currentPlayer.hasWon();
     }
 
     /**
@@ -99,11 +83,12 @@ public class Game {
      */
     public boolean wrongAnswer() {
         Player currentPlayer = players.currentPlayer();
+        players.nextPlayer();
+
         print("Question was incorrectly answered");
         currentPlayer.entersPenaltyBox();
         print(currentPlayer + " was sent to the penalty box");
 
-        players.nextPlayer();
         return true;
     }
 }
