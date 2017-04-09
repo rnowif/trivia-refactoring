@@ -71,9 +71,7 @@ public class Game {
 
         move(roll);
 
-        print(players.get(currentPlayer)
-                + "'s new location is "
-                + currentPosition());
+        print(players.get(currentPlayer) + "'s new location is " + currentPosition());
         print("The category is " + currentCategory());
         askQuestion();
     }
@@ -83,7 +81,7 @@ public class Game {
     }
 
     private Category currentCategory() {
-       return categoriesByPosition.get(currentPosition());
+        return categoriesByPosition.get(currentPosition());
     }
 
 
@@ -111,10 +109,7 @@ public class Game {
 
             print("Answer was correct!!!!");
             purses[currentPlayer]++;
-            print(players.get(currentPlayer)
-                    + " now has "
-                    + purses[currentPlayer]
-                    + " Gold Coins.");
+            print(players.get(currentPlayer) + " now has " + purses[currentPlayer] + " Gold Coins.");
 
             boolean winner = didPlayerWin();
             currentPlayer = nextPlayer();
