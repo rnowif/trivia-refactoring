@@ -11,19 +11,35 @@ public class Game {
     private static final List<Category> CATEGORIES = asList(Category.POP, Category.SCIENCE, Category.SPORTS, Category.ROCK);
 
     private final PrintStream output;
-    private final PlayerList players = new PlayerList();
-    private final Board board = new Board(NB_CELLS, CATEGORIES);
-    private final QuestionDeck deck = new QuestionDeck(NB_QUESTIONS, CATEGORIES);
+    private final Board board;
+    private final PlayerList players;
+    private final QuestionDeck deck;
 
-    public Game(PrintStream output) {
+    public Game(PrintStream output, Board board, QuestionDeck deck, PlayerList players) {
         this.output = output;
+        this.board = board;
+        this.deck = deck;
+        this.players = players;
     }
 
+    /**
+     * @deprecated Use constructor with fields instead
+     */
     @Deprecated
     public Game() {
-        this(System.out);
+        this(
+                System.out,
+                new Board(NB_CELLS, CATEGORIES),
+                new QuestionDeck(NB_QUESTIONS, CATEGORIES),
+                new PlayerList()
+        );
     }
 
+    /**
+     * @param playerName Name of the player to add
+     * @deprecated Use the constructor with a predefined list of players
+     */
+    @Deprecated
     public void add(String playerName) {
         players.add(playerName);
         print(playerName + " was added");
@@ -47,7 +63,6 @@ public class Game {
                 print(currentPlayer + " is not getting out of the penalty box");
                 return;
             }
-
         }
 
         int newPosition = board.newPosition(currentPlayer.getPosition(), roll);

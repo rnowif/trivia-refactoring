@@ -3,11 +3,28 @@ package com.adaptionsoft.games.uglytrivia;
 import java.util.ArrayList;
 import java.util.List;
 
-class PlayerList {
+public class PlayerList {
 
     private final List<Player> players = new ArrayList<>();
     private int currentPlayerIndex = 0;
 
+    /**
+     * @deprecated Use the constructor with a predefined list of players
+     */
+    @Deprecated
+    public PlayerList() {
+        this(new ArrayList<>());
+    }
+
+    public PlayerList(List<String> names) {
+        names.forEach(this::add);
+    }
+
+    /**
+     * @deprecated Use the constructor with a predefined list of players
+     * @param playerName Name of the player to add
+     */
+    @Deprecated
     void add(String playerName) {
         players.add(new Player(playerName));
     }

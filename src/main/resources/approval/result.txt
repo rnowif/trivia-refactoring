@@ -1,9 +1,3 @@
-Chet was added
-There are 1 players
-Pat was added
-There are 2 players
-Sue was added
-There are 3 players
 Chet is the current player
 They have rolled a 1
 Chet's new location is 1

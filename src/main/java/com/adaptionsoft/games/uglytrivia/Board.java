@@ -2,12 +2,12 @@ package com.adaptionsoft.games.uglytrivia;
 
 import java.util.List;
 
-class Board {
+public class Board {
 
     private final int cellsCount;
     private final List<Category> categories;
 
-    Board(int cellsCount, List<Category> categories) {
+    public Board(int cellsCount, List<Category> categories) {
         this.cellsCount = cellsCount;
         this.categories = categories;
     }

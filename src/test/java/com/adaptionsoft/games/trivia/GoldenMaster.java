@@ -1,15 +1,23 @@
 package com.adaptionsoft.games.trivia;
 
-import com.adaptionsoft.games.uglytrivia.Game;
+import com.adaptionsoft.games.uglytrivia.*;
 import com.github.approval.Approvals;
 import org.junit.Test;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.nio.file.Paths;
+import java.util.List;
 import java.util.Random;
 
+import static java.util.Arrays.asList;
+
 public class GoldenMaster {
+
+    private static final int NB_CELLS = 12;
+    private static final int NB_QUESTIONS = 50;
+    private static final List<Category> CATEGORIES = asList(Category.POP, Category.SCIENCE, Category.SPORTS, Category.ROCK);
+    private static final List<String> PLAYERS = asList("Chet", "Pat", "Sue");
 
     @Test
     public void should_record_and_verify_golden_master() {
@@ -22,11 +30,12 @@ public class GoldenMaster {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
         boolean notAWinner;
-        Game aGame = new Game(new PrintStream(outputStream));
-
-        aGame.add("Chet");
-        aGame.add("Pat");
-        aGame.add("Sue");
+        Game aGame = new Game(
+                new PrintStream(outputStream),
+                new Board(NB_CELLS, CATEGORIES),
+                new QuestionDeck(NB_QUESTIONS, CATEGORIES),
+                new PlayerList(PLAYERS)
+        );
 
         Random rand = new Random(seed);
 

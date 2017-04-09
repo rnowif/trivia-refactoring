@@ -2,10 +2,10 @@ package com.adaptionsoft.games.uglytrivia;
 
 import java.util.*;
 
-class QuestionDeck {
+public class QuestionDeck {
     private final Map<Category, Deque<String>> questionsByCategory = new HashMap<>();
 
-    QuestionDeck(int questionCount, List<Category> categories) {
+    public QuestionDeck(int questionCount, List<Category> categories) {
         for (Category category : categories) {
             questionsByCategory.put(category, new LinkedList<>());
         }
