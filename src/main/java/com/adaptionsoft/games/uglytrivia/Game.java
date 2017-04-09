@@ -77,11 +77,11 @@ public class Game {
 
         print(playerName + "'s new location is " + currentPosition);
         print("The category is " + currentCategory);
-        askQuestion(currentCategory);
+        print(askQuestion(currentCategory));
     }
 
-    private void askQuestion(Category category) {
-        print(questionsByCategory.get(category).removeFirst());
+    private String askQuestion(Category category) {
+        return questionsByCategory.get(category).removeFirst();
     }
 
     private Category currentCategory(int position) {
