@@ -7,17 +7,17 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class Game {
-    public static final int NB_CELLS = 12;
+    private static final int NB_CELLS = 12;
     private final PrintStream output;
-    private List<String> players = new ArrayList<>();
-    private int[] places = new int[6];
-    private int[] purses = new int[6];
-    private boolean[] inPenaltyBox = new boolean[6];
+    private final List<String> players = new ArrayList<>();
+    private final int[] places = new int[6];
+    private final int[] purses = new int[6];
+    private final boolean[] inPenaltyBox = new boolean[6];
 
-    private Deque<String> popQuestions = new LinkedList<>();
-    private Deque<String> scienceQuestions = new LinkedList<>();
-    private Deque<String> sportsQuestions = new LinkedList<>();
-    private Deque<String> rockQuestions = new LinkedList<>();
+    private final Deque<String> popQuestions = new LinkedList<>();
+    private final Deque<String> scienceQuestions = new LinkedList<>();
+    private final Deque<String> sportsQuestions = new LinkedList<>();
+    private final Deque<String> rockQuestions = new LinkedList<>();
 
     private int currentPlayer = 0;
     private boolean isGettingOutOfPenaltyBox;
@@ -37,15 +37,14 @@ public class Game {
         this(System.out);
     }
 
-    public boolean add(String playerName) {
+    public void add(String playerName) {
         players.add(playerName);
         places[players.size()] = 0;
         purses[players.size()] = 0;
         inPenaltyBox[players.size()] = false;
 
         print(playerName + " was added");
-        print("They are player number " + players.size());
-        return true;
+        print("There are " + players.size() + " players");
     }
 
     private void print(String message) {
@@ -86,10 +85,6 @@ public class Game {
 
     }
 
-    private void move(int offset) {
-        places[currentPlayer] = (currentPosition() + offset) % NB_CELLS;
-    }
-
     private void askQuestion() {
         if (currentCategory().equals(Category.POP))
             print(popQuestions.removeFirst());
@@ -100,7 +95,6 @@ public class Game {
         if (currentCategory().equals(Category.ROCK))
             print(rockQuestions.removeFirst());
     }
-
 
     private Category currentCategory() {
         if (currentPosition() == 0) return Category.POP;
@@ -115,12 +109,21 @@ public class Game {
         return Category.ROCK;
     }
 
+
+    private void move(int offset) {
+        places[currentPlayer] = (currentPosition() + offset) % NB_CELLS;
+    }
+
     private int currentPosition() {
         return places[currentPlayer];
     }
 
     private int nextPlayer() {
         return (currentPlayer + 1) % players.size();
+    }
+
+    private boolean didPlayerWin() {
+        return purses[currentPlayer] != 6;
     }
 
     public boolean wasCorrectlyAnswered() {
@@ -159,6 +162,7 @@ public class Game {
         }
     }
 
+
     public boolean wrongAnswer() {
         print("Question was incorrectly answered");
         print(players.get(currentPlayer) + " was sent to the penalty box");
@@ -166,10 +170,5 @@ public class Game {
 
         currentPlayer = nextPlayer();
         return true;
-    }
-
-
-    private boolean didPlayerWin() {
-        return !(purses[currentPlayer] == 6);
     }
 }
